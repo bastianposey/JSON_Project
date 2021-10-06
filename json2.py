@@ -14,6 +14,7 @@ list_of_eqs = eqdata["features"]
 mags = []
 lons = []
 lats =[]
+hover_texts = []
 for eq in list_of_eqs:
     mag = eq['properties']['mag']
     mags.append(mag)
@@ -24,6 +25,9 @@ for eq in list_of_eqs:
     lon = eq["geometry"]["coordinates"][0]
     lons.append(lon)
 
+    title = eq["properties"]["title"]
+    hover_texts.append(title)
+
 
 print(mags[:5])
 print(lons[:5])
@@ -32,7 +36,21 @@ print(lats[:5])
 from plotly.graph_objs import Scattergeo, Layout
 from plotly import offline
 
-data = [Scattergeo(lon=lons, lat=lats)]
+#data = [Scattergeo(lon=lons, lat=lats)]
+
+data = [{
+    'type': 'scattergeo',
+    'lon': lons,
+    'lat': lats,
+    'text': hover_texts,
+    'marker': {
+        'size': [i*5 for i in mags],
+        'color': mags,
+        'colorscale': 'Viridis',
+        'reversescale': True,
+        'colorbar': {'title':'Magnitude'}
+    }
+}]
 
 my_layout = Layout(title="Global Earthquakes 30 Day")
 
